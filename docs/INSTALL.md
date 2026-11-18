@@ -84,7 +84,7 @@ Wynik:
   Repo:   twoj-user/ghdisk-store
   Gałąź:  main
   Limit:  5.00 GiB (realny, GitHub)
-  Widok:  909.49 PiB (wirtualny)
+  Widok:  1024.00 PB = 909.49 PiB (wirtualny)
 ```
 
 ### 6. Montowanie
@@ -102,8 +102,11 @@ df -h ~/ghdisk
 
 ```
 Filesystem      Size  Used Avail Use% Mounted on
-ghdisk         1024P     0 1024P   0% /home/user/ghdisk
+GhDiskFS        910P     0  910P   0% /home/user/ghdisk
 ```
+
+> `df -h` liczy w potęgach 1024, więc 1 024 000 000 000 000 000 B pokazuje jako **910P**.
+> Sprawdź dokładnie: `df -B1 ~/ghdisk` → `1024000000000000000`.
 
 Test zapisu:
 
@@ -228,6 +231,8 @@ ghdisk get /plik.bin C:\dane\odzyskany.bin
 | `GitHub API 403` | limit API 5000/h | poczekaj do resetu (godzina) |
 | `QuotaExceeded` | przekroczony `real_quota` | `ghdisk df --honest`, `ghdisk gc`, albo podnieś `GHDISK_REAL_QUOTA` |
 | `df` pokazuje 1024P, zapis zawodzi | to jest zamierzone | patrz [LIMITS.md](LIMITS.md) |
+| `Transport endpoint is not connected` | proces `ghdisk mount` został ubity bez odmontowania | `sudo umount -l ~/ghdisk` (lazy), potem zamontuj ponownie |
+| `fusermount: failed to unmount` | to samo, zawieszony wpis w tablicy montowań | `sudo umount -l ~/ghdisk` lub restart |
 | Zapis bardzo wolny | GitHub API ~1–5 MB/s | normalne; to archiwum, nie dysk roboczy |
 
 ### Diagnostyka
