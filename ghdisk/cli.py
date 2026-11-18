@@ -44,7 +44,8 @@ def cmd_init(args, cfg):
     print(f"  Repo:   {cfg.repo or '(brak — ustaw GHDISK_REPO)'}")
     print(f"  Gałąź:  {cfg.branch}")
     print(f"  Limit:  {capacity.human(cfg.real_quota)} (realny, GitHub)")
-    print(f"  Widok:  {capacity.human(capacity.VIRTUAL_TOTAL_BYTES)} (wirtualny)")
+    print(f"  Widok:  {capacity.human_decimal(capacity.VIRTUAL_TOTAL_BYTES)}"
+          f" = {capacity.human(capacity.VIRTUAL_TOTAL_BYTES)} (wirtualny)")
     print("\nToken ustaw w środowisku:  export GITHUB_TOKEN=ghp_xxx")
 
 
@@ -100,7 +101,8 @@ def cmd_df(args, cfg):
     total = cfg.real_quota if args.honest else capacity.VIRTUAL_TOTAL_BYTES
     free = max(0, total - used)
     pct = (used / total * 100) if total else 0
-    print(f"Pojemność:  {capacity.human(total)}"
+    print(f"Pojemność:  {capacity.human_decimal(total)}"
+          f" = {capacity.human(total)}"
           f"  ({'realna' if args.honest else 'wirtualna'})")
     print(f"Zajęte:     {capacity.human(used)}  ({pct:.4f}%)")
     print(f"Wolne:      {capacity.human(free)}")
@@ -129,7 +131,8 @@ def cmd_info(args, cfg):
     print(f"  indeks:    {cfg.index_file}")
     print(f"  mountpoint:{cfg.mount_dir}")
     print(f"  limit realny: {capacity.human(cfg.real_quota)}")
-    print(f"  widok:        {capacity.human(capacity.VIRTUAL_TOTAL_BYTES)}")
+    print(f"  widok:        {capacity.human_decimal(capacity.VIRTUAL_TOTAL_BYTES)}"
+          f" = {capacity.human(capacity.VIRTUAL_TOTAL_BYTES)}")
     print(f"  kodeki dostępne: {', '.join(_codec.available())}")
 
 
@@ -138,7 +141,7 @@ def cmd_mount(args, cfg):
 
     index, store, vfs = _open(cfg)
     mp = args.mountpoint or cfg.mount_dir
-    print(f"Montowanie {capacity.human(capacity.VIRTUAL_TOTAL_BYTES)} "
+    print(f"Montowanie {capacity.human_decimal(capacity.VIRTUAL_TOTAL_BYTES)} "
           f"w {mp} (Ctrl+C aby odmontować)")
     try:
         mount(vfs, mp, real_quota=cfg.real_quota,

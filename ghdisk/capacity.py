@@ -35,10 +35,14 @@ def human(nbytes: int) -> str:
 
 
 def human_decimal(nbytes: int) -> str:
-    """Czytelny zapis rozmiaru (jednostki dziesiętne — jak podaje producent)."""
+    """Czytelny zapis rozmiaru (jednostki dziesiętne — jak podaje producent).
+
+    Zatrzymuje się na PB, żeby 1024 PB było widoczne jako "1024.00 PB",
+    a nie "1.02 EB".
+    """
     n = float(nbytes)
-    for unit in ("B", "kB", "MB", "GB", "TB", "PB", "EB"):
-        if abs(n) < 1000.0 or unit == "EB":
+    for unit in ("B", "kB", "MB", "GB", "TB", "PB"):
+        if abs(n) < 1000.0 or unit == "PB":
             if unit == "B":
                 return f"{int(n)} B"
             return f"{n:.2f} {unit}"
